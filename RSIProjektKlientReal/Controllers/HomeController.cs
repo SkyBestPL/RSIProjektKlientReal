@@ -122,6 +122,23 @@ namespace RSIProjektKlientReal.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DownloadEventsPdf()
+        {
+            try
+            {
+                var response = await _eventServiceClient.getEventsAsPDFAsync();
+                var pdfBytes = response.@return;
+
+                return File(pdfBytes, "application/pdf", "event_report.pdf");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Nie uda³o siê pobraæ PDF: " + ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
         public IActionResult Privacy()
         {
             return View();
