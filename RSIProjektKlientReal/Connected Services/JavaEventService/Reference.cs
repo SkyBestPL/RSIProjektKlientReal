@@ -809,7 +809,7 @@ namespace JavaEventService
         {
             if ((endpointConfiguration == EndpointConfiguration.EventServicePort))
             {
-                return new System.ServiceModel.EndpointAddress("http://192.168.50.91:8080/RSIProjekt_war_exploded/eventService");
+                return new System.ServiceModel.EndpointAddress("http://localhost:8080/RSIProjekt_war_exploded/eventService");
             }
             throw new System.InvalidOperationException(string.Format("Nie można znaleźć punktu końcowego o nazwie „{0}”.", endpointConfiguration));
         }

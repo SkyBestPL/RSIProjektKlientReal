@@ -12,6 +12,49 @@
 
 <h1>Lista Eventów</h1>
 
+<!-- Formularze filtrowania -->
+<div class="mb-4">
+    <form asp-action="GetByDate" method="get" class="mb-2">
+        <label>Data:</label>
+        <input type="date" name="date" />
+        <button type="submit" class="btn btn-primary">Pokaż tego dnia</button>
+    </form>
+
+    <form asp-action="GetByWeek" method="get" class="mb-2">
+        <label>Tydzień:</label>
+        <input type="number" name="week" min="1" max="52" />
+        <label>Rok:</label>
+        <input type="number" name="year" />
+        <button type="submit" class="btn btn-primary">Pokaż w tym tygodniu</button>
+    </form>
+
+    <form asp-action="GetByMonth" method="get" class="mb-2">
+        <label>Miesiąc:</label>
+        <input type="number" name="month" min="1" max="12" />
+        <label>Rok:</label>
+        <input type="number" name="year" />
+        <button type="submit" class="btn btn-primary">Pokaż w tym miesiącu</button>
+    </form>
+
+    <form asp-action="GetById" method="get" class="mb-2">
+        <label>ID eventu:</label>
+        <input type="text" name="id" />
+        <button type="submit" class="btn btn-primary">Pokaż po ID</button>
+    </form>
+
+    <div class="d-flex gap-2">
+        <form asp-action="DownloadPdf" method="get">
+            <button type="submit" class="btn btn-success">Pobierz PDF</button>
+        </form>
+
+        <form asp-action="Index" method="get">
+            <button type="submit" class="btn btn-secondary">Resetuj filtry</button>
+        </form>
+    </div>
+
+</div>
+
+<!-- Tabela eventów -->
 @if (Model != null && Model.Any())
 {
     <table class="table">
@@ -25,6 +68,7 @@
                 <th>Miesiąc</th>
                 <th>Rok</th>
                 <th>Opis</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -39,12 +83,45 @@
                     <td>@eventItem.month</td>
                     <td>@eventItem.year</td>
                     <td>@eventItem.description</td>
+                    <td>
+                        <form asp-action="Delete" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@eventItem.id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+
 }
 else
 {
     <p>Brak dostępnych eventów.</p>
 }
+
+<!-- Formularz dodawania/edycji -->
+<h2 class="mt-5">Dodaj/Edytuj Event</h2>
+<form asp-action="AddOrUpdate" method="post">
+    <div class="form-group">
+        <label>ID (jeśli edycja):</label>
+        <input type="text" name="id" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Nazwa:</label>
+        <input type="text" name="name" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Typ:</label>
+        <input type="text" name="type" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Data:</label>
+        <input type="date" name="date" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Opis:</label>
+        <textarea name="description" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-warning mt-2">Zapisz Event</button>
+</form>
