@@ -1,0 +1,50 @@
+﻿@model List<JavaEventService.@event>
+@{
+    ViewData["Title"] = "Lista Eventów";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+<h1>Lista Eventów</h1>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+                <th>Typ</th>
+                <th>Data</th>
+                <th>Tydzień</th>
+                <th>Miesiąc</th>
+                <th>Rok</th>
+                <th>Opis</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var eventItem in Model)
+            {
+                <tr>
+                    <td>@eventItem.id</td>
+                    <td>@eventItem.name</td>
+                    <td>@eventItem.type</td>
+                    <td>@eventItem.date</td>
+                    <td>@eventItem.week</td>
+                    <td>@eventItem.month</td>
+                    <td>@eventItem.year</td>
+                    <td>@eventItem.description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Brak dostępnych eventów.</p>
+}
