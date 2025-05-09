@@ -123,6 +123,22 @@ namespace RSIProjektKlientReal.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetByName(string name)
+        {
+            try
+            {
+                var response = await _eventServiceClient.getEventsByNameAsync(name);
+                var events = response.@return?.ToList() ?? new List<@event>();
+                return View("Index", events);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "B³¹d podczas wyszukiwania eventów: " + ex.Message;
+                return View("Index", new List<@event>());
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> DownloadEventsPdf()
         {
             try
@@ -136,6 +152,53 @@ namespace RSIProjektKlientReal.Controllers
             {
                 TempData["ErrorMessage"] = "Nie uda³o siê pobraæ PDF: " + ex.Message;
                 return RedirectToAction("Index");
+            }
+        }
+
+        public async Task<IActionResult> Edit(string id)
+        {
+            try
+            {
+                var response = await _eventServiceClient.getAllEventsAsync();
+                var events = response.@return?.ToList() ?? new List<@event>();
+
+                ViewBag.SelectedId = id;
+                return View(events);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "B³¹d podczas pobierania wydarzeñ: " + ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(@event updatedEvent)
+        {
+            try
+            {
+                if (DateTime.TryParse(updatedEvent.date, out var date))
+                {
+                    updatedEvent.month = date.Month;
+                    updatedEvent.year = date.Year;
+                    updatedEvent.week = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(
+                        date,
+                        CalendarWeekRule.FirstFourDayWeek,
+                        DayOfWeek.Monday);
+                }
+                await _eventServiceClient.updateEventAsync(updatedEvent);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "B³¹d podczas aktualizacji eventu: " + ex.Message;
+
+                var response = await _eventServiceClient.getAllEventsAsync();
+                var events = response.@return?.ToList() ?? new List<@event>();
+
+                ViewBag.SelectedId = updatedEvent.id;
+
+                return View("Edit", events);
             }
         }
 

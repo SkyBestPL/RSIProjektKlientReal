@@ -1,0 +1,42 @@
+﻿@model List<JavaEventService.@event>
+
+@{
+    ViewData["Title"] = "Edytuj Wydarzenie";
+    var eventToEdit = Model.FirstOrDefault(e => e.id == ViewBag.SelectedId);
+}
+
+@if (eventToEdit == null)
+{
+    <div class="alert alert-danger">
+        Nie znaleziono wydarzenia o podanym ID.
+    </div>
+}
+else
+{
+    <h2>Edytuj Wydarzenie</h2>
+
+    <form asp-action="Update" method="post">
+        <div class="form-group">
+            <label>ID:</label>
+            <input type="text" name="id" class="form-control" value="@eventToEdit.id" readonly />
+        </div>
+        <div class="form-group">
+            <label>Nazwa:</label>
+            <input type="text" name="name" class="form-control" value="@eventToEdit.name" required />
+        </div>
+        <div class="form-group">
+            <label>Typ:</label>
+            <input type="text" name="type" class="form-control" value="@eventToEdit.type" required />
+        </div>
+        <div class="form-group">
+            <label>Data:</label>
+            <input type="date" name="date" class="form-control" value="@eventToEdit.date" required />
+        </div>
+        <div class="form-group">
+            <label>Opis:</label>
+            <textarea name="description" class="form-control">@eventToEdit.description</textarea>
+        </div>
+        <button type="submit" class="btn mt-2" style="background-color: mediumaquamarine; color: black;">Zapisz zmiany</button>
+        <a asp-action="Index" class="btn btn-secondary mt-2">Anuluj</a>
+    </form>
+}
